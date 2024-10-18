@@ -26,7 +26,7 @@ app.use(express.json());
 db.run("CREATE TABLE IF NOT EXISTS utdanningsprogrammer (id INTEGER PRIMARY KEY AUTOINCREMENT, navn STRING, forkortelse STRING);")
 
 // empty endpoints
-app.get("/api", (req, res, next) => {
+app.get("/api/utdanningsprogrammer", (req, res, next) => {
     db.all("SELECT * FROM utdanningsprogrammer", (err, rows) => {
         if (err) {
             res.status(500).json({ "error": err.message });
@@ -36,7 +36,7 @@ app.get("/api", (req, res, next) => {
     });
 });
 
-app.post("/api", (req, res, next) => {
+app.post("/api/utdanningsprogrammer", (req, res, next) => {
     const message = req.body;
     console.log(message);
     db.run('INSERT INTO utdanningsprogrammer (navn, forkortelse) VALUES (?, ?)', message.navn, message.forkortelse, (err) => {
@@ -51,7 +51,7 @@ app.post("/api", (req, res, next) => {
 
 
 // ID specific endpoints
-app.get("/api/:id", (req, res, next) => {
+app.get("/api/utdanningsprogrammer/:id", (req, res, next) => {
     db.all("SELECT * FROM utdanningsprogrammer WHERE id = ?", req.params.id, (err, rows) => {
         if (err) {
             res.status(500).json({ "error": err.message });
@@ -61,7 +61,7 @@ app.get("/api/:id", (req, res, next) => {
     });
 });
 
-app.put("/api/:id", (req, res, next) => {
+app.put("/api/utdanningsprogrammer/:id", (req, res, next) => {
     const message = req.body;
     db.run('UPDATE utdanningsprogrammer SET navn = ?, forkortelse = ? WHERE id = ?', message.navn, message.forkortelse, req.params.id, (err) => {
         if (err) {
@@ -72,7 +72,7 @@ app.put("/api/:id", (req, res, next) => {
     });
 });
 
-app.delete("/api/:id", (req, res, next) => {
+app.delete("/api/utdanningsprogrammer/:id", (req, res, next) => {
     db.run('DELETE FROM utdanningsprogrammer WHERE id = ?', req.params.id, (err) => {
         if (err) {
             res.status(500).json({ "error": err.message });
@@ -123,6 +123,11 @@ app.get("/api/year/:id", (req, res, next) => {
 });
 
 
+
+
+
+
 //// linjer endpoints
 //id, fag_data, utdanningsprogram_id, år, name, 
-//0, { data }, 1, 1
+db.run("CREATE TABLE IF NOT EXISTS linjer (id INTEGER PRIMARY KEY AUTOINCREMENT, fag_data DICTIONARY, utdanningsprogram_id INTEGER, year INTEGER, name STRING);")
+
