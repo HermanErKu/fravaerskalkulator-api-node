@@ -81,3 +81,48 @@ app.delete("/api/:id", (req, res, next) => {
         res.json({ "deleted": this.changes });
     });
 });
+
+
+
+
+
+
+//// år endpoints
+db.run("CREATE TABLE IF NOT EXISTS year (id INTEGER PRIMARY KEY AUTOINCREMENT, navn STRING);")
+
+app.get("/api/year", (req, res, next) => {
+    db.all("SELECT * FROM year", (err, rows) => {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+            return;
+        }        
+        res.json(rows);
+    });
+});
+
+app.post("/api/year", (req, res, next) => {
+    const message = req.body;
+    console.log(message);
+    db.run('INSERT INTO year (navn) VALUES (?)', message.navn, (err) => {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+            return;
+        }
+        res.json({ "id": this.lastID });
+    });
+});
+
+app.get("/api/year/:id", (req, res, next) => {
+    db.all("SELECT * FROM year WHERE id = ?", req.params.id, (err, rows) => {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
+
+//// linjer endpoints
+//id, fag_data, utdanningsprogram_id, år, name, 
+//0, { data }, 1, 1
