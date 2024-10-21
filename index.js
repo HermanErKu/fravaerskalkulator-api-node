@@ -102,7 +102,6 @@ app.get("/api/year", (req, res, next) => {
 
 app.post("/api/year", (req, res, next) => {
     const message = req.body;
-    console.log(message);
     db.run('INSERT INTO year (navn) VALUES (?)', message.navn, (err) => {
         if (err) {
             res.status(500).json({ "error": err.message });
@@ -143,7 +142,6 @@ app.get("/api/linjer", (req, res, next) => {
 
 app.post("/api/linjer", (req, res, next) => {
     const message = req.body;
-    console.log(message);    
     db.run("INSERT INTO linjer (fag_data, utdanningsprogram_id, year, name) VALUES (?, ?, ?, ?)", message.fag_data, message.utdanningsprogram_id, message.year, message.name, (err) => {
         if (err) {
             res.status(500).json({ "error": err.message });
@@ -151,7 +149,18 @@ app.post("/api/linjer", (req, res, next) => {
         }        
         res.json({ "id": this.lastID });
     });
-})
+});
+
+app.put("/api/linjer/:id", (req, res, next) => {
+    const message = req.body;
+    db.run("UPDATE linjer SET fag_data=?, utdanningsprogram_id=?, year=?, name=? WHERE id=?", message.fag_data, message.utdanningsprogram_id, message.year, message.name, req.params.id, (err) => {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+            return;
+        }
+        res.json({ "id": this.lastID });
+    });
+});
 
 app.delete("/api/linjer/:id", (req, res, next) => {
     db.run('DELETE FROM linjer WHERE id = ?', req.params.id, (err) => {
