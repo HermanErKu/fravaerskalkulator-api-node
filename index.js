@@ -128,6 +128,37 @@ app.get("/api/year/:id", (req, res, next) => {
 
 
 //// linjer endpoints
-//id, fag_data, utdanningsprogram_id, år, name, 
+//id, fag_data, utdanningsprogram_id, year, name, 
 db.run("CREATE TABLE IF NOT EXISTS linjer (id INTEGER PRIMARY KEY AUTOINCREMENT, fag_data DICTIONARY, utdanningsprogram_id INTEGER, year INTEGER, name STRING);")
 
+app.get("/api/linjer", (req, res, next) => {
+    db.all("SELECT * FROM linjer", (err, rows) => {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
+app.post("/api/linjer", (req, res, next) => {
+    const message = req.body;
+    console.log(message);    
+    db.run("INSERT INTO linjer (fag_data, utdanningsprogram_id, year, name) VALUES (?, ?, ?, ?)", message.fag_data, message.utdanningsprogram_id, message.year, message.name, (err) => {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+            return;
+        }        
+        res.json({ "id": this.lastID });
+    });
+})
+
+app.delete("/api/linjer/:id", (req, res, next) => {
+    db.run('DELETE FROM linjer WHERE id = ?', req.params.id, (err) => {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+            return;
+        }
+        res.json({ "deleted": this.changes });
+    });
+});
